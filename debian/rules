@@ -1,0 +1,10 @@
+#! /usr/bin/make -f
+
+export PYBUILD_NAME=pirogue_cli
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+# Shipped in the tarball, modified after a build:
+override_dh_clean:
+	dh_clean
+	rm -rf pirogue_cli.egg-info/
