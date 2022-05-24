@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from enum import Enum
 from typing import List, Optional
 
 from pydbus import SystemBus

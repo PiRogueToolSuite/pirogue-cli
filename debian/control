@@ -19,5 +19,4 @@ Depends: ${misc:Depends},
  python3-pydbus,
  python3-libusb1,
  python3-gi,
- python3-adb-shell,
 Description: Provision PiRogue CLI tool
