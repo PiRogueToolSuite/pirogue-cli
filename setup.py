@@ -15,8 +15,8 @@ setup(
     zip_safe=True,
     entry_points={
         "console_scripts": [
-            "pirogue-cli = pirogue_cli.cmd.cli:main",
-            "pirogue-config = pirogue_cli.cmd.cli:configuration",
+            "pirogue-ctl = pirogue_cli.cmd.cli:main",
+            "pirogue-config = pirogue_cli.cmd.cli:configuration",  # used during Debian packages installation
             "pirogue-intercept-tls = pirogue_cli.network.intercept_tls:start_interception",
         ],
     },

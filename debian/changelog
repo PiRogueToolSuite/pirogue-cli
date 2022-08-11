@@ -1,3 +1,9 @@
+pirogue-cli (1.0.1) unstable; urgency=medium
+
+  * Add configuration support and nice status UI
+
+ -- U+039b <hello@pts-project.org>  Thu, 11 Aug 2022 18:14:51 +0200
+
 pirogue-cli (1.0.0) unstable; urgency=medium
 
   * First release 
