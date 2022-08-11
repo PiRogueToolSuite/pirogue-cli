@@ -55,6 +55,32 @@ def main():
         android_route.get(args.action, __install_frida)()
 
 
+def configuration():
+    from pirogue_cli.config.config_manager import show_current_configuration, show_backups, revert_backup, apply
+    arg_parser = argparse.ArgumentParser(prog='pirogue', description='PiRogue configuration')
+    subparsers = arg_parser.add_subparsers(dest='func')
+
+    apply_group = subparsers.add_parser('apply', help='Apply configuration')
+    show_group = subparsers.add_parser('show', help='Show configuration')
+    backups_group = subparsers.add_parser('backups', help='Show configuration backups')
+    revert_group = subparsers.add_parser('revert', help='Revert configuration to its previous version')
+
+    apply_group.add_argument('--prompt', help='Apply the configuration without asking for confirmation', action='store_true', default=True)
+    show_group.add_argument('--raw', help='Show configuration in format that can be sourced', action='store_true', default=False)
+
+    args = arg_parser.parse_args()
+    if not args.func:
+        arg_parser.print_help()
+
+    if args.func == 'apply':
+        apply(prompt=args.prompt)
+    elif args.func == 'show':
+        show_current_configuration(raw=args.raw)
+    elif args.func == 'backups':
+        show_backups()
+    elif args.func == 'revert':
+        revert_backup()
+
+
 if __name__ == '__main__':
-    console = Console()
-    main()
+    configuration()

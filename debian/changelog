@@ -1,4 +1,10 @@
-pirogue-cli (1.0) unstable; urgency=medium
+pirogue-cli (1.0.0) unstable; urgency=medium
+
+  * First release 
+
+ -- U+039b <hello@pts-project.org>  Thu, 11 Aug 2022 15:21:57 +0200
+
+pirogue-cli (1.0.0-beta) unstable; urgency=medium
 
   * Initial release.
 
