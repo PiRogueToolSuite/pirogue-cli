@@ -91,12 +91,12 @@ def show_backups():
         if backup.is_currently_applied:
             backup_table.add_row(
                 f'[white bold]>> [/white bold]{backup.id}',
-                backup.path[60:],
+                backup.path,
             )
         else:
             backup_table.add_row(
                 f'{backup.id}',
-                backup.path[60:],
+                backup.path,
             )
         backup_table.add_row(
             '',
