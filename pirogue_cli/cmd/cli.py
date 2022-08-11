@@ -85,7 +85,7 @@ def configuration():
     apply_group = subparsers.add_parser('apply', help='Apply configuration')
     show_group = subparsers.add_parser('show', help='Show configuration')
     backups_group = subparsers.add_parser('backups', help='Show configuration backups')
-    revert_group = subparsers.add_parser('revert', help='Revert configuration to its previous version')
+    revert_group = subparsers.add_parser('revert', help='Revert configuration to a previous version')
 
     apply_group.add_argument('--prompt', help='Apply the configuration without asking for confirmation', action='store_true', default=True)
     show_group.add_argument('--raw', help='Show configuration in format that can be sourced', action='store_true', default=False)
