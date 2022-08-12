@@ -1,3 +1,5 @@
+import sys
+
 from rich import box
 from rich.align import Align
 from rich.columns import Columns
@@ -54,8 +56,10 @@ def show_current_configuration(raw=False):
     if raw:
         if current_configuration:
             current_configuration.show()
+            sys.exit(0)
         else:
             print()
+            sys.exit(1)
     else:
         console = Console()
         if current_configuration:
