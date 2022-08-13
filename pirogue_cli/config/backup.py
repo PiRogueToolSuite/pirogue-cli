@@ -35,12 +35,12 @@ class ConfigurationFromBackup:
         self.read()
         self.configuration_handlers = [
             DhcpcdConfigurationHandler(self),
-            GrafanaConfigurationHandler(self),
             DnsmasqConfigurationHandler(self),
             HostapdConfigurationHandler(self),
             SuricataConfigurationHandler(self),
             IptablesConfigurationHandler(self),
             FlowInspectorConfigurationHandler(self),
+            GrafanaConfigurationHandler(self),
             #  etc.
         ]
 
