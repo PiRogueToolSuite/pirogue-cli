@@ -17,7 +17,7 @@ Depends: ${misc:Depends},
  python3-requests,
  python3-rich,
  python3-psutil,
- python3-semver
+ python3-semver,
  python3-pydbus,
  python3-libusb1,
  python3-netifaces,
