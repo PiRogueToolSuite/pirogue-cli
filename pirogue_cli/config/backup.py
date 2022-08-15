@@ -45,12 +45,11 @@ class ConfigurationFromBackup:
         ]
 
     def read(self):
-        # log.info(f'Reading configuration from file {self.configuration_file_path}')
         self.settings = self.configuration_parser.read()
 
     def show(self):
         for k, v in self.settings.items():
-            print(f'{k}={v}')
+            print(f'{k}="{v}"')
 
     def apply(self):
         applied = []
