@@ -45,9 +45,9 @@ def main():
     apply_group = config_subparsers.add_parser('apply', help='Apply configuration')
     show_group = config_subparsers.add_parser('show', help='Show configuration')
     backups_group = config_subparsers.add_parser('backups', help='Show configuration backups')
-    revert_group = config_subparsers.add_parser('revert', help='Revert configuration to its previous version')
+    revert_group = config_subparsers.add_parser('restore', help='Restore configuration from a previous version')
 
-    apply_group.add_argument('--prompt', help='Apply the configuration without asking for confirmation', action='store_true', default=True)
+    apply_group.add_argument('--no_prompt', help='Apply the configuration without asking for confirmation', action='store_true', default=True)
     show_group.add_argument('--raw', help='Show configuration in format that can be sourced', action='store_true', default=False)
 
     args = arg_parser.parse_args()
@@ -61,12 +61,12 @@ def main():
     elif args.func == 'config':
         from pirogue_cli.config.config_manager import show_current_configuration, show_backups, revert_backup, apply
         if args.config_func == 'apply':
-            apply(prompt=args.prompt)
+            apply(prompt=args.no_prompt)
         elif args.config_func == 'show':
             show_current_configuration(raw=args.raw)
         elif args.config_func == 'backups':
             show_backups()
-        elif args.config_func == 'revert':
+        elif args.config_func == 'restore':
             revert_backup()
     elif args.func == 'android':
         android_route = {
