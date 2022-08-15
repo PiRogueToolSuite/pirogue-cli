@@ -113,7 +113,7 @@ def make_net_panel() -> Panel:
     table.add_column(style="medium_purple1", justify="right")
     table.add_column(style="white", justify="left")
     table.add_row(
-        'Flow inspector (DPI)', get_service_status('hostapd.service')
+        'Flow inspector (DPI)', get_service_status('pirogue-flow-inspector@*.service')
     )
     table.add_row(
         'Alarm collector', get_service_status('pirogue-eve-collector.service')
