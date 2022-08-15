@@ -33,6 +33,16 @@ class ConfigurationFromBackup:
         self.configuration_file_path = f'{backup_path}/pirogue.env'
         self.configuration_parser = KeyValuePairParser(self.configuration_file_path)
         self.read()
+        self.configuration_handlers = []
+
+    def read(self):
+        self.settings = self.configuration_parser.read()
+
+    def show(self):
+        for k, v in self.settings.items():
+            print(f'{k}="{v}"')
+
+    def apply(self):
         self.configuration_handlers = [
             DhcpcdConfigurationHandler(self),
             DnsmasqConfigurationHandler(self),
@@ -43,15 +53,6 @@ class ConfigurationFromBackup:
             GrafanaConfigurationHandler(self),
             #  etc.
         ]
-
-    def read(self):
-        self.settings = self.configuration_parser.read()
-
-    def show(self):
-        for k, v in self.settings.items():
-            print(f'{k}="{v}"')
-
-    def apply(self):
         applied = []
         for handler in self.configuration_handlers:
             try:
