@@ -42,8 +42,8 @@ class Configuration:
     def __init__(self, prefix=''):
         self.settings: Optional[dict] = None
         self.id = int(time.time_ns() / 1000)
-        self.configuration_folder_path = f'{prefix}/usr/share/pirogue/config'
-        self.configuration_backup_path = f'{prefix}/usr/share/pirogue/config/backups'
+        self.configuration_folder_path = f'{prefix}/var/lib/pirogue/config'
+        self.configuration_backup_path = f'{prefix}/var/lib/pirogue/config/backups'
         self.configuration_file_path = f'{self.configuration_folder_path}/pirogue.env'
         self.configuration_parser = KeyValuePairParser(self.configuration_file_path)
         self.init()
@@ -76,7 +76,7 @@ class Configuration:
             self.__generate_defaults()
 
     def exists(self):
-        return os.path.isfile(self.configuration_file_path)
+        return os.path.isfile(self.configuration_file_path) and os.path.isdir(self.configuration_backup_path)
 
     def backup(self, set_current=False) -> ConfigurationFromBackup:
         current_backup_folder = f'{self.configuration_backup_path}/{self.id}'
