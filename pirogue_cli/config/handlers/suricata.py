@@ -31,7 +31,7 @@ class SuricataConfigurationHandler:
 
         # Check if pirogue specific package is installed
         package_info = get_install_packages(self.target_package)
-        package_version = '0'
+        package_version = '0.0.1'
         if package_info and len(package_info) == 1:
             package_info = package_info[0]
             package_version = package_info.get('version')
