@@ -15,7 +15,7 @@ def get_install_packages(pattern: str) -> List[dict]:
         output = subprocess.check_output(cmd, shell=True, universal_newlines=True)
         for line in output.splitlines():
             status, package, version, homepage = line.split('\t')
-            if 'ok installed' in status:
+            if 'ok installed' in status or 'install ok half-configured' in status:
                 packages.append({
                     'installed': '[green]:heavy_check_mark:[/green]',
                     'package': package,
