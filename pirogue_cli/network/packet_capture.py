@@ -30,8 +30,6 @@ class TcpDump:
         try:
             self.process = subprocess.Popen(
                 self.capture_cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
                 shell=True
             )
         except Exception as e:

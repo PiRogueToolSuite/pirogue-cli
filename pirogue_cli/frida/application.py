@@ -19,13 +19,13 @@ class FridaApplication(ConsoleApplication):
 
     def _add_options(self, parser):
         parser.add_argument('-o', '--output', help='The output directory')
-        parser.add_argument('-i', '--iface', help='The network interface to capture')
+        parser.add_argument('-i', '--iface', help='The network interface to capture', default='wlan0')
 
     def _initialize(self, parser, options, args):
-        print(options)
         if not os.path.exists(options.output):
             os.makedirs(options.output)
         self.output_dir = options.output
+        self._output_files = {}
         iface = options.iface
         self.tcp_dump = TcpDump(
             interface=iface,
@@ -36,7 +36,7 @@ class FridaApplication(ConsoleApplication):
         time.sleep(5)
 
     def _usage(self):
-        return 'usage: %prog [options] target'
+        return 'usage: %%prog [options] target'
 
     def _needs_target(self):
         return True
