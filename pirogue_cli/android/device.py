@@ -13,6 +13,7 @@ class AndroidDevice:
     def __init__(self):
         self.frida_server_name = 'frydaxx-server'
         self.frida_server_install_dir = f'/data/local/tmp/{self.frida_server_name}'
+        self.has_adb_root = False
         self.__connect()
         self._check_frida_server_installed()
 
@@ -39,11 +40,16 @@ class AndroidDevice:
                 'adb root',
                 shell=True,
                 stderr=subprocess.PIPE)
+            self.has_adb_root = True
+            if 'adbd cannot run as root in production builds' in output.decode():
+                self.has_adb_root = False
             return output
         except CalledProcessError as e:
             raise e
 
     def __adb_shell(self, command):
+        if not self.has_adb_root:
+            command = f'su -c "{command}"'
         output = subprocess.check_output(
             f'adb shell {command}',
             shell=True,
@@ -52,6 +58,8 @@ class AndroidDevice:
 
     def __adb_shell_no_wait(self, command):
         try:
+            if not self.has_adb_root:
+                command = f'su -c "{command}"'
             subprocess.Popen(f'adb shell {command}', shell=True)
         except CalledProcessError as e:
             raise e
