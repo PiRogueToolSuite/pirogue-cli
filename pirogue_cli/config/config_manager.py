@@ -1,9 +1,13 @@
+import logging
+import os
+import subprocess
 import sys
 
 from rich import box
 from rich.align import Align
 from rich.columns import Columns
 from rich.console import Console
+from rich.logging import RichHandler
 from rich.panel import Panel
 from rich.prompt import Confirm
 from rich.prompt import Prompt
@@ -11,6 +15,10 @@ from rich.table import Table
 
 from pirogue_cli.config.config import Configuration
 
+LOG_FORMAT = '[%(name)s] %(message)s'
+logging.basicConfig(level='INFO', format=LOG_FORMAT, handlers=[
+    RichHandler(show_path=False, log_time_format='%X')])
+log = logging.getLogger(__name__)
 prefix = ''
 
 
@@ -34,8 +42,8 @@ def show_configurations(console):
     new_configuration.read()
     current_configuration = new_configuration.get_currently_applied_configuration()
     new_configuration_panel = Panel(__make_config_panel(new_configuration.settings),
-                                        border_style="green",
-                                        title='Configuration to be applied')
+                                    border_style="green",
+                                    title='Configuration to be applied')
     if current_configuration:
         current_configuration_panel = Panel(__make_config_panel(current_configuration.settings),
                                             border_style="medium_purple1",
@@ -139,7 +147,14 @@ def apply(prompt=False):
         confirm = Confirm.ask('Apply the new configuration?', default=False)
         if confirm:
             new_configuration.apply()
-            # print('new_configuration.apply()')
     elif not prompt and is_dirty:
         new_configuration.apply()
-        # print('new_configuration.apply()')
+
+
+def edit_config():
+    if os.geteuid() != 0:
+        log.error('Need root to edit the configuration file, please re-run with sudo.')
+        sys.exit(1)
+    configuration = Configuration(prefix=prefix)
+    editor = os.getenv('EDITOR', 'nano')
+    subprocess.call([editor, configuration.configuration_file_path])

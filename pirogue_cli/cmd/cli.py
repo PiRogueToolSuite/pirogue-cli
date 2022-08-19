@@ -42,8 +42,9 @@ def main():
     config_group = subparsers.add_parser('config', help='Manage PiRogue configuration')
     config_subparsers = config_group.add_subparsers(dest='config_func')
 
-    apply_group = config_subparsers.add_parser('apply', help='Apply configuration')
     show_group = config_subparsers.add_parser('show', help='Show configuration')
+    edit_group = config_subparsers.add_parser('edit', help='Edit the current configuration file')
+    apply_group = config_subparsers.add_parser('apply', help='Apply configuration')
     backups_group = config_subparsers.add_parser('backups', help='Show configuration backups')
     revert_group = config_subparsers.add_parser('restore', help='Restore configuration from a previous version')
 
@@ -59,7 +60,7 @@ def main():
         from pirogue_cli.status.status_panel import print_pirogue_status
         print_pirogue_status()
     elif args.func == 'config':
-        from pirogue_cli.config.config_manager import show_current_configuration, show_backups, revert_backup, apply
+        from pirogue_cli.config.config_manager import show_current_configuration, show_backups, revert_backup, apply, edit_config
         if args.config_func == 'apply':
             apply(prompt=args.no_prompt)
         elif args.config_func == 'show':
@@ -68,6 +69,8 @@ def main():
             show_backups()
         elif args.config_func == 'restore':
             revert_backup()
+        elif args.config_func == 'edit':
+            edit_config()
     elif args.func == 'android':
         android_route = {
             'install-frida': __install_frida,
