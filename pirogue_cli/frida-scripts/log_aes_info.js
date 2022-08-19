@@ -49,7 +49,7 @@ function log_aes_info() {
             }
         }
         send(msg)
-        console.log("Creating " + alg + " secret key, plaintext:\\n" + hexdump(key));
+        // console.log("Creating " + alg + " secret key, plaintext:\\n" + hexdump(key));
         return secretKeySpecDef_init_1.call(this, arr, alg);
     }
 
@@ -69,7 +69,7 @@ function log_aes_info() {
             }
         }
         send(msg)
-        console.log("Creating " + alg + " secret key, plaintext:\\n" + hexdump(key));
+        // console.log("Creating " + alg + " secret key, plaintext:\\n" + hexdump(key));
         return secretKeySpecDef_init_2.call(this, arr, off, len, alg);
     }
 
