@@ -7,6 +7,8 @@ import time
 import pkg_resources
 from frida_tools.application import ConsoleApplication
 
+from pirogue_cli.android.device import AndroidDevice
+from pirogue_cli.config.config import Configuration
 from pirogue_cli.network.packet_capture import TcpDump
 
 PWD = pkg_resources.resource_filename('pirogue_cli', 'frida-scripts')
@@ -17,23 +19,34 @@ class FridaApplication(ConsoleApplication):
     SESSION_ID_LENGTH = 32
     MASTER_KEY_LENGTH = 48
 
+    def __init__(self):
+
+        super(FridaApplication, self).__init__()
+
     def _add_options(self, parser):
+        configuration = Configuration()
+        current_configuration = configuration.get_currently_applied_configuration()
+        default_iface = 'wlan0'
+        if current_configuration:
+            default_iface = current_configuration.settings.get('WLAN_IFACE')
         parser.add_argument('-o', '--output', help='The output directory')
-        parser.add_argument('-i', '--iface', help='The network interface to capture', default='wlan0')
+        parser.add_argument('-i', '--iface', help='The network interface to capture', default=default_iface)
 
     def _initialize(self, parser, options, args):
         if not os.path.exists(options.output):
             os.makedirs(options.output)
         self.output_dir = options.output
         self._output_files = {}
-        iface = options.iface
+        self.iface = options.iface
         self.tcp_dump = TcpDump(
-            interface=iface,
+            interface=self.iface,
             output_dir=self.output_dir,
             pcap_file_name='traffic.pcap'
         )
+        self.device = AndroidDevice()
+        self.device.start_frida_server()
         self.tcp_dump.start_capture()
-        time.sleep(5)
+        # time.sleep(1)
 
     def _usage(self):
         return 'usage: %%prog [options] target'

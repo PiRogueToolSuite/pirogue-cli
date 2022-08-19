@@ -25,15 +25,32 @@ class TcpDump:
         self.process = None
         self.capture_cmd = f'tcpdump -U -i {self.interface} -w {output_dir}/{pcap_file_name}'
 
+    @staticmethod
+    def __check_user_rights():
+        try:
+            subprocess.check_call(
+                'tcpdump -c 1',
+                timeout=1,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+        except subprocess.CalledProcessError:
+            raise Exception('You do not have the permission to dump network traffic. Re-run with sudo.')
+        except Exception:
+            pass
+
     def start_capture(self):
         log.info(f'⚡ Starting network interception...')
+        TcpDump.__check_user_rights()
         try:
             self.process = subprocess.Popen(
                 self.capture_cmd,
-                shell=True
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
             )
         except Exception as e:
-            print(e)
             self.stop_capture()
             raise e
 

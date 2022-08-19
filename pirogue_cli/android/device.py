@@ -14,12 +14,16 @@ class AndroidDevice:
         self.frida_server_name = 'frydaxx-server'
         self.frida_server_install_dir = f'/data/local/tmp/{self.frida_server_name}'
         self.has_adb_root = False
-        self.__connect()
+        self.requires_su = False
+        self.rooted = False
+        self.is_rooted()
         self._check_frida_server_installed()
+        self.__connect()
 
     def __connect(self):
         log.info('⚡ Connecting to the USB device...')
-        self.__adb_root()
+        if not self.rooted:
+            raise Exception('Your Android device must be rooted')
         log.info(f'⚡ Connected...')
 
     def get_architecture(self):
@@ -34,21 +38,41 @@ class AndroidDevice:
             return "x86"
         return ""
 
-    def __adb_root(self):
+    def is_rooted(self):
         try:
             output = subprocess.check_output(
                 'adb root',
                 shell=True,
-                stderr=subprocess.PIPE)
+                stderr=subprocess.PIPE, )
             self.has_adb_root = True
             if 'adbd cannot run as root in production builds' in output.decode():
                 self.has_adb_root = False
-            return output
+                try:
+                    subprocess.check_call(
+                        'adb shell su',
+                        shell=True,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE, )
+                    self.requires_su = True
+                except CalledProcessError as e:
+                    pass
         except CalledProcessError as e:
-            raise e
+            pass
+        self.rooted = self.has_adb_root or self.requires_su
+        return self.rooted
+
+    # def __adb_root(self):
+    #     try:
+    #         subprocess.check_call(
+    #             'adb root',
+    #             shell=True,
+    #             stdout=subprocess.PIPE,
+    #             stderr=subprocess.PIPE)
+    #     except CalledProcessError as e:
+    #         pass
 
     def __adb_shell(self, command):
-        if not self.has_adb_root:
+        if self.requires_su:
             command = f'su -c "{command}"'
         output = subprocess.check_output(
             f'adb shell {command}',
@@ -58,7 +82,7 @@ class AndroidDevice:
 
     def __adb_shell_no_wait(self, command):
         try:
-            if not self.has_adb_root:
+            if self.requires_su:
                 command = f'su -c "{command}"'
             subprocess.Popen(f'adb shell {command}', shell=True)
         except CalledProcessError as e:
@@ -69,6 +93,7 @@ class AndroidDevice:
             subprocess.check_call(
                 f'adb push {local_file} {to}',
                 shell=True,
+                stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE)
         except CalledProcessError as e:
             raise e
