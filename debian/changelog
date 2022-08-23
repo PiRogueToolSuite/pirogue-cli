@@ -1,3 +1,11 @@
+pirogue-cli (1.0.2) unstable; urgency=medium
+
+  * Remove Frida debug output
+  * Ensure rooted device and user's permissions
+  * Add sub-command to easily edit the configuration
+
+ -- U+039b <hello@pts-project.org>  Fri, 19 Aug 2022 23:51:52 +0200
+
 pirogue-cli (1.0.1) unstable; urgency=medium
 
   * Add configuration support and nice status UI
