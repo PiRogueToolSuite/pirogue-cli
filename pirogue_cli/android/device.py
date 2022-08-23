@@ -49,7 +49,7 @@ class AndroidDevice:
                 self.has_adb_root = False
                 try:
                     subprocess.check_call(
-                        'adb shell su',
+                        'adb shell su -c "echo 1"',
                         shell=True,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE, )
