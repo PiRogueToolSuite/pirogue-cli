@@ -17,6 +17,7 @@ setup(
         "console_scripts": [
             "pirogue-ctl = pirogue_cli.cmd.cli:main",
             "pirogue-intercept-tls = pirogue_cli.network.intercept_tls:start_interception",
+            "pirogue-view-tls = pirogue_cli.network.view_tls:view_decrypted_traffic",
         ],
     },
     classifiers=[
