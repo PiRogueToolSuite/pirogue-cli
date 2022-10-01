@@ -79,6 +79,7 @@ class FridaApplication(ConsoleApplication):
         self._script.load()
         self._update_status('Loaded script')
         api = self._script.exports
+        api.socket_trace()
         api.log_ssl_keys()
         api.log_aes_info()
         self._update_status('Loaded script')
