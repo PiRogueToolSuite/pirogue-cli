@@ -4,6 +4,7 @@ from subprocess import CalledProcessError
 from tempfile import NamedTemporaryFile
 
 from pirogue_cli.frida.server import FridaServer
+from pirogue_cli.system.apt import get_install_packages
 
 log = logging.getLogger(__name__)
 
@@ -113,8 +114,28 @@ class AndroidDevice:
     def _check_frida_server_installed(self):
         try:
             self.__adb_shell(f'ls {self.frida_server_install_dir}')
+            frida_server_version = self.get_frida_server_version()
+            frida_client_version = self.get_frida_client_version()
+            if frida_server_version != frida_client_version:
+                self.install_latest_frida_server()
+
         except CalledProcessError:
             self.install_latest_frida_server()
+
+    def get_frida_server_version(self):
+        try:
+            return self.__adb_shell(f'{self.frida_server_install_dir} --version').strip()
+        except:
+            return '0.0.0'
+
+    def get_frida_client_version(self):
+        frida_package = get_install_packages('frida')
+        if len(frida_package) != 1:
+            raise Exception('Unable to get the version of Frida installed on the PiRogue')
+        frida_version = frida_package[0].get('version')
+        if '~pirogue' in frida_version:
+            frida_version = frida_version[0:frida_version.find('~')]
+        return frida_version
 
     def start_frida_server(self):
         if self._check_frida_server_running():
@@ -125,12 +146,16 @@ class AndroidDevice:
 
     def stop_frida_server(self):
         log.info(f'⚡ Stopping Frida server...')
-        self.__adb_shell(f'pkill {self.frida_server_name}')
+        try:
+            self.__adb_shell(f'pkill {self.frida_server_name}')
+        except Exception as e:
+            log.error(e)
 
     def install_latest_frida_server(self):
+        frida_client_version = self.get_frida_client_version()
         log.info(f'⚡ Installing the latest version of frida-server as {self.frida_server_name}...')
         with NamedTemporaryFile(mode='wb') as frida_server:
-            FridaServer.download_frida_server(self.get_architecture(), frida_server.name, 'android')
+            FridaServer.download_frida_server(self.get_architecture(), frida_server.name, 'android', frida_client_version)
             frida_server.seek(0)
             self.__adb_push(frida_server.name, self.frida_server_install_dir)
             self.__adb_shell(f'chmod +x {self.frida_server_install_dir}')

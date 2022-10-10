@@ -1,3 +1,9 @@
+pirogue-cli (1.0.6) unstable; urgency=medium
+
+  * Align the Frida server version with the version Frida installed on the PiRogue
+
+ -- U+039b <hello@pts-project.org>  Mon, 10 Oct 2022 13:37:08 +0200
+
 pirogue-cli (1.0.5) unstable; urgency=medium
 
   * Add tracing of socket operations
