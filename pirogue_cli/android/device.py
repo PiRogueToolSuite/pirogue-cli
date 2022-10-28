@@ -1,5 +1,6 @@
 import logging
 import subprocess
+import time
 from subprocess import CalledProcessError
 from tempfile import NamedTemporaryFile
 
@@ -46,9 +47,18 @@ class AndroidDevice:
                 shell=True,
                 stderr=subprocess.PIPE, )
             self.has_adb_root = True
-            if 'adbd cannot run as root in production builds' in output.decode():
+            if (
+                'adbd cannot run as root in production builds' in output.decode()
+                # This happens when root is disabled in developer options
+                or 'ADB Root access is disabled' in output.decode()
+            ):
                 self.has_adb_root = False
                 try:
+                    # This small sleep step is required to ensure adb is
+                    # correctly recovering after failed adb root.
+                    # Otherwise, one will get an "error: closed" stderr.
+                    time.sleep(1)
+                    # Check whether root escalation is possible through su.
                     subprocess.check_call(
                         'adb shell su -c "echo 1"',
                         shell=True,
@@ -61,16 +71,6 @@ class AndroidDevice:
             pass
         self.rooted = self.has_adb_root or self.requires_su
         return self.rooted
-
-    # def __adb_root(self):
-    #     try:
-    #         subprocess.check_call(
-    #             'adb root',
-    #             shell=True,
-    #             stdout=subprocess.PIPE,
-    #             stderr=subprocess.PIPE)
-    #     except CalledProcessError as e:
-    #         pass
 
     def __adb_shell(self, command):
         if self.requires_su:
