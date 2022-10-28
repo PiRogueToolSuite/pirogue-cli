@@ -1,4 +1,5 @@
 import logging
+import shutil
 import subprocess
 from typing import List
 
@@ -9,6 +10,10 @@ log = logging.getLogger(__name__)
 
 
 def get_install_packages(pattern: str) -> List[dict]:
+    if shutil.which('dpkg-query') is None:
+        # Not running on Raspbian/Ubuntu/Debian
+        return []
+
     cmd = 'dpkg-query --showformat=\'${Status}\t${Package}\t${Version}\t${Homepage}\n\' -W "%s"' % pattern
     packages = []
     try:
