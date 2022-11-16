@@ -4,6 +4,8 @@ import signal
 import subprocess
 import time
 
+from typing import Optional
+
 log = logging.getLogger(__name__)
 
 
@@ -11,19 +13,25 @@ class TcpDump:
     __slots__ = (
         'interface',
         'capture_cmd',
+        'has_user_provided_cmd',
         'pcap_file_name',
         'output_dir',
         'process'
     )
 
-    def __init__(self, interface: str, output_dir: str, pcap_file_name: str):
-        self.interface = interface
+    def __init__(self, capture_cmd: Optional[str], interface: str, output_dir: str, pcap_file_name: str):
+        if capture_cmd:
+            self.capture_cmd = capture_cmd
+            self.has_user_provided_cmd = True
+        else:
+            self.interface = interface
+            self.capture_cmd = f'tcpdump -U -i {self.interface}'
+            self.has_user_provided_cmd = False
         self.pcap_file_name = pcap_file_name
         if not self.pcap_file_name.endswith('.pcap'):
             self.pcap_file_name += '.pcap'
         self.output_dir = output_dir
         self.process = None
-        self.capture_cmd = f'tcpdump -U -i {self.interface} -w {output_dir}/{pcap_file_name}'
 
     @staticmethod
     def __check_user_rights():
@@ -42,12 +50,13 @@ class TcpDump:
 
     def start_capture(self):
         log.info(f'⚡ Starting network interception...')
-        TcpDump.__check_user_rights()
+        if not self.has_user_provided_cmd:
+            TcpDump.__check_user_rights()
         try:
             self.process = subprocess.Popen(
                 self.capture_cmd,
                 shell=True,
-                stdout=subprocess.PIPE,
+                stdout=open(f'{self.output_dir}/{self.pcap_file_name}', 'w'),
                 stderr=subprocess.PIPE,
             )
         except Exception as e:

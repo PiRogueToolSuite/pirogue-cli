@@ -2,6 +2,7 @@ import glob
 import json
 import logging
 import os
+import sys
 import time
 
 import pkg_resources
@@ -20,16 +21,27 @@ class FridaApplication(ConsoleApplication):
     MASTER_KEY_LENGTH = 48
 
     def __init__(self):
-
         super(FridaApplication, self).__init__()
 
     def _add_options(self, parser):
-        configuration = Configuration()
-        current_configuration = configuration.get_currently_applied_configuration()
+        try:
+            configuration = Configuration()
+            current_configuration = configuration.get_currently_applied_configuration()
+        except:
+            log.warn('Could not load configuration - skipping.')
+            current_configuration = None
         default_iface = 'wlan0'
         if current_configuration:
             default_iface = current_configuration.settings.get('WLAN_IFACE')
-        parser.add_argument('-o', '--output', help='The output directory')
+        parser.add_argument(
+            '--capture-command',
+            help=(
+                'Specify directly a capture command instead of building it from interface. '
+                'Useful for remote capture over SSH. Example: '
+                'ssh root@openwrt "tcpdump -s0 -U -n -w - -i wlan0 \'host PHONE_IP\'"'
+            )
+        )
+        parser.add_argument('-o', '--output', help='The output directory', required=True)
         parser.add_argument('-i', '--iface', help='The network interface to capture', default=default_iface)
 
     def _initialize(self, parser, options, args):
@@ -39,6 +51,7 @@ class FridaApplication(ConsoleApplication):
         self._output_files = {}
         self.iface = options.iface
         self.tcp_dump = TcpDump(
+            capture_cmd=options.capture_command,
             interface=self.iface,
             output_dir=self.output_dir,
             pcap_file_name='traffic.pcap'
@@ -49,7 +62,7 @@ class FridaApplication(ConsoleApplication):
         # time.sleep(1)
 
     def _usage(self):
-        return 'usage: %%prog [options] target'
+        return f'{sys.argv[0]} [options] target'
 
     def _needs_target(self):
         return True
