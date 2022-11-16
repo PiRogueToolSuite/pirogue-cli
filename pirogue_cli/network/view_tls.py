@@ -20,7 +20,7 @@ def compute_community_id(trace):
     src_port = trace['data']['local_port']
     dst_ip = _clean_ip_address(trace['data']['dest_ip'])
     dst_port = trace['data']['dest_port']
-    
+
     if 'tcp' in trace['data']['socket_type']:
         tpl = communityid.FlowTuple.make_tcp(src_ip, dst_ip, src_port, dst_port)
     else:
@@ -35,7 +35,7 @@ def compute_community_id(trace):
     }
 
 def build_community_id_stack_traces(socket_trace_file):
-    socket_traces = json.load(socket_trace_file) 
+    socket_traces = json.load(socket_trace_file)
     stack_traces = {}
 
     for trace in socket_traces:
@@ -283,3 +283,7 @@ def view_decrypted_traffic():
                         console.print()
                 except:
                     pass
+
+
+if __name__ == '__main__':
+    view_decrypted_traffic()

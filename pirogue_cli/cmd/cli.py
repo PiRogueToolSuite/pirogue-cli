@@ -78,3 +78,7 @@ def main():
             'stop-frida': __stop_frida,
         }
         android_route.get(args.action, __install_frida)()
+
+
+if __name__ == '__main__':
+    main()

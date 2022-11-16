@@ -12,6 +12,18 @@ setup(
         "frida-scripts/*.js",
         "config-files/*"
     ]},
+    install_requires=[
+        'rich',
+        'pydbus',
+        'requests',
+        'semver',
+        'pygobject',
+        'pyyaml',
+        'netifaces',
+        'psutil',
+        'frida_tools',
+        'communityid',
+    ],
     zip_safe=True,
     entry_points={
         "console_scripts": [
