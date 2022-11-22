@@ -25,7 +25,7 @@ class TcpDump:
             self.has_user_provided_cmd = True
         else:
             self.interface = interface
-            self.capture_cmd = f'tcpdump -U -i {self.interface}'
+            self.capture_cmd = f'tcpdump -U -w - -i {self.interface}'
             self.has_user_provided_cmd = False
         self.pcap_file_name = pcap_file_name
         if not self.pcap_file_name.endswith('.pcap'):

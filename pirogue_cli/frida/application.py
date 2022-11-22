@@ -38,7 +38,7 @@ class FridaApplication(ConsoleApplication):
             help=(
                 'Specify directly a capture command instead of building it from interface. '
                 'Useful for remote capture over SSH. Example: '
-                'ssh root@openwrt "tcpdump -s0 -U -n -w - -i wlan0 \'host PHONE_IP\'"'
+                'ssh root@openwrt "tcpdump -U -n -w - -i wlan0 \'host PHONE_IP\'"'
             )
         )
         parser.add_argument('-o', '--output', help='The output directory', required=True)
