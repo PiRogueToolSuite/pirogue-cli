@@ -12,7 +12,9 @@ python3 -m venv .venv
 
 ## Usage from a local virtual environment
 
-```
+You can run the scripts from the local virtual environment:
+
+```bash
 ./.venv/bin/pirogue-ctl --help
 ./.venv/bin/pirogue-intercept-tls --help
 ./.venv/bin/pirogue-view-tls --help
@@ -21,8 +23,11 @@ python3 -m venv .venv
 
 ## Developer setup
 
-```
-./.venv/bin/python -m pirogue-ctl --help
+For easier hacking, you can run the scripts without `pip install`ing them
+prior through the equivalent endpoints:
+
+```bash
+./.venv/bin/python -m pirogue_cli.cmd.cli --help
 ./.venv/bin/python -m pirogue_cli.network.intercept_tls --help
 ./.venv/bin/python -m pirogue_cli.network.view_tls --help
 ```
