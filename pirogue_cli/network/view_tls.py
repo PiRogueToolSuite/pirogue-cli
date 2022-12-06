@@ -144,6 +144,8 @@ def parse_http3(layers: dict, layer_names: list):
 def parse_http(layers: dict, layer_names: list):
     headers, data = None, None
     http_layer = layers.get('http')
+    if http_layer and type(http_layer) is list: # list in case of websocket communication
+        http_layer = http_layer[0]
     data = http_layer.get('http_http_file_data', '')
     raw_headers = None
     if 'http_http_response_line' in http_layer:
