@@ -5,7 +5,7 @@ from signal import signal, SIGINT, SIGTERM
 from rich.console import Console
 from rich.logging import RichHandler
 
-from pirogue_cli.frida.instrument_single import FridaApplication
+from pirogue_cli.frida.instrument_gated import FridaApplication
 
 LOG_FORMAT = '[%(name)s] %(message)s'
 logging.basicConfig(level='INFO', format=LOG_FORMAT, handlers=[
