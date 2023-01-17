@@ -2,7 +2,7 @@
 
 export PYBUILD_NAME=pirogue_cli
 %:
-	dh $@ --with python3 --buildsystem=pybuild
+	dh $@ --with quilt,python3 --buildsystem=pybuild
 
 override_dh_builddeb:
 	dh_builddeb -- -Zxz
