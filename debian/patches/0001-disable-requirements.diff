@@ -1,0 +1,12 @@
+Disable support requires.txt since packages express their dependencies
+via Depends/Recommends already.
+--- a/setup.py
++++ b/setup.py
+@@ -9,7 +9,6 @@ setup(
+     author_email="hello@pts-project.org",
+     description="CLI interface to control the PiRogue",
+     url="https://github.com/PiRogueToolSuite/pirogue-cli",
+-    install_requires=requirements,
+     packages=find_packages(),
+     package_data={"pirogue_cli": [
+         "frida-scripts/*.js",
