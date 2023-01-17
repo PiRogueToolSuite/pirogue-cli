@@ -15,7 +15,6 @@ def on_spawned(spawn):
 def on_message(capture_manager, spawn, message):
     if message['type'] == 'send':
         data = message.get('payload')
-        print('.')
         if data:
             if data.get('data_type') == 'json':
                 data['pid'] = spawn.pid
@@ -35,7 +34,7 @@ class FridaApplication:
             '--capture-command',
             help=(
                 'Specify directly a capture command instead of building it from interface. '
-                'Useful for remote capture over SSH. Example: '
+                'Useful for remote capture over SSH. Example:\n'
                 'ssh root@openwrt "tcpdump -U -n -w - -i wlan0 \'host PHONE_IP\'"'
             )
         )
@@ -71,7 +70,7 @@ class FridaApplication:
                 print('Instrumenting:', spawn)
                 session = self._device.attach(spawn.pid)
                 script = session.create_script(self.capture_manager.get_agent_script())
-                script.on('message', lambda message: on_message(self.capture_manager, spawn, message))
+                script.on('message', lambda message, data: on_message(self.capture_manager, spawn, message))
                 script.load()
                 api = script.exports
                 api.socket_trace()

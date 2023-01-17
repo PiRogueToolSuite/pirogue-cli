@@ -1,5 +1,6 @@
 import logging
 import subprocess
+import time
 from subprocess import CalledProcessError
 from tempfile import NamedTemporaryFile
 
@@ -46,9 +47,15 @@ class AndroidDevice:
                 shell=True,
                 stderr=subprocess.PIPE, )
             self.has_adb_root = True
-            if 'adbd cannot run as root in production builds' in output.decode():
+            if (
+                'adbd cannot run as root in production builds' in output.decode()
+                # This happens when root is disabled in developer options
+                or 'ADB Root access is disabled' in output.decode()
+            ):
                 self.has_adb_root = False
                 try:
+                    time.sleep(1)
+                    # Check whether root escalation is possible through su.
                     subprocess.check_call(
                         'adb shell su -c "echo 1"',
                         shell=True,
@@ -61,16 +68,6 @@ class AndroidDevice:
             pass
         self.rooted = self.has_adb_root or self.requires_su
         return self.rooted
-
-    # def __adb_root(self):
-    #     try:
-    #         subprocess.check_call(
-    #             'adb root',
-    #             shell=True,
-    #             stdout=subprocess.PIPE,
-    #             stderr=subprocess.PIPE)
-    #     except CalledProcessError as e:
-    #         pass
 
     def __adb_shell(self, command):
         if self.requires_su:
@@ -131,7 +128,10 @@ class AndroidDevice:
     def get_frida_client_version(self):
         frida_package = get_install_packages('frida')
         if len(frida_package) != 1:
-            raise Exception('Unable to get the version of Frida installed on the PiRogue')
+            log.warning(
+                'Unable to get the version of Frida installed on the PiRogue, defaulting to latest version.'
+            )
+            return None
         frida_version = frida_package[0].get('version')
         if '~pirogue' in frida_version:
             frida_version = frida_version[0:frida_version.find('~')]
@@ -153,10 +153,10 @@ class AndroidDevice:
 
     def install_latest_frida_server(self):
         frida_client_version = self.get_frida_client_version()
-        log.info(f'⚡ Installing the latest version of frida-server as {self.frida_server_name}...')
+        log.info(f'⚡ Installing the matching version of frida-server as {self.frida_server_name}...')
         with NamedTemporaryFile(mode='wb') as frida_server:
             FridaServer.download_frida_server(self.get_architecture(), frida_server.name, 'android', frida_client_version)
             frida_server.seek(0)
             self.__adb_push(frida_server.name, self.frida_server_install_dir)
             self.__adb_shell(f'chmod +x {self.frida_server_install_dir}')
-            log.info('⚡ Latest version of frida-server successfully installed...')
+            log.info('⚡ Matching version of frida-server successfully installed...')

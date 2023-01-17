@@ -19,11 +19,6 @@ class FridaApplication(ConsoleApplication):
         super(FridaApplication, self).__init__()
 
     def _add_options(self, parser):
-        # configuration = Configuration()
-        # current_configuration = configuration.get_currently_applied_configuration()
-        # default_iface = 'wlan0'
-        # if current_configuration:
-        #     default_iface = current_configuration.settings.get('WLAN_IFACE')
         parser.add_argument(
             '--capture-command',
             help=(
@@ -38,31 +33,9 @@ class FridaApplication(ConsoleApplication):
     def _initialize(self, parser, options, args):
         self.capture_manager = CaptureManager(options.output, iface=options.iface)
         self.capture_manager.start_capture(capture_cmd=options.capture_command)
-        # if not os.path.exists(options.output):
-        #     os.makedirs(options.output)
-        # self.output_dir = options.output
-        # self._output_files = {}
-        # self.iface = options.iface
-        # self.tcp_dump = TcpDump(
-        #     interface=self.iface,
-        #     output_dir=self.output_dir,
-        #     pcap_file_name='traffic.pcap'
-        # )
-        # self.device = AndroidDevice()
-        # self.device.start_frida_server()
-        # self.tcp_dump.start_capture()
 
     def _needs_target(self):
         return True
-
-    # @staticmethod
-    # def _agent():
-    #     js_files = glob.glob(f'{PWD}/*.js', recursive=True)
-    #     js_script = ''
-    #     for js_file in js_files:
-    #         with open(js_file, mode='r') as f:
-    #             js_script += f.read()
-    #     return js_script
 
     def _start(self):
         self._output_files = {}
@@ -92,24 +65,6 @@ class FridaApplication(ConsoleApplication):
 
     def save_data(self):
         self.capture_manager.stop_capture()
-        # log.info('Saving Frida data')
-        # for filename, elt in self._output_files.items():
-        #     if len(elt) == 0:
-        #         continue
-        #     data_type = elt[0].get('data_type')
-        #     with open(f'{self.output_dir}/{filename}', mode='w') as out:
-        #         if data_type == 'json':
-        #             json.dump(elt, out, indent=2)
-        #         else:
-        #             for record in elt:
-        #                 data = record.get('data')
-        #                 out.write(f'{data}\n')
-
-    # def _acc_data(self, data):
-    #     output_file = data.get('dump')
-    #     if output_file not in self._output_files:
-    #         self._output_files[output_file] = []
-    #     self._output_files[output_file].append(data)
 
     def _on_message(self, message, data):
         if message['type'] == 'send':

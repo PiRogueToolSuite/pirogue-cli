@@ -1,0 +1,10 @@
+rich
+pydbus
+requests
+semver
+pygobject
+pyyaml
+netifaces
+psutil
+frida_tools
+communityid

@@ -43,7 +43,9 @@ class TcpDump:
                 stderr=subprocess.PIPE,
             )
         except subprocess.CalledProcessError:
-            raise Exception('You do not have the permission to dump network traffic. Re-run with sudo.')
+            raise Exception("""You do not have the permission to dump network traffic. Re-run with sudo.\n
+                Or, run the following command to grant your user the right to capture network traffic:\n
+                sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/tcpdump""")
         except Exception:
             pass
 
