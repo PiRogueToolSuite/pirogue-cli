@@ -15,7 +15,7 @@ class ScreenRecorder:
 
     def start_recording(self):
         log.info(f'⚡ Starting screen recording...')
-        capture_cmd = f'scrcpy --max-size=1024 --max-fps=15 --bit-rate=2M --record={self.output_dir}/screen.mp4 -N'
+        capture_cmd = f'scrcpy -t --max-size=1024 --max-fps=15 --bit-rate=2M --record={self.output_dir}/screen.mp4 -N'
         try:
             self.process = subprocess.Popen(
                 capture_cmd,
