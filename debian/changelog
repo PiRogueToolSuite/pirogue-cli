@@ -1,3 +1,9 @@
+pirogue-cli (1.0.8) unstable; urgency=medium
+
+  * Add screen recording support
+
+ -- U+039b <hello@pts-project.org>  Tue, 07 Feb 2023 15:55:33 +0100
+
 pirogue-cli (1.0.7) unstable; urgency=medium
 
   * Support spawn gating 

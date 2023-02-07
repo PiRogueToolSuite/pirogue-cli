@@ -6,6 +6,7 @@ import os
 import pkg_resources
 
 from pirogue_cli.android.device import AndroidDevice
+from pirogue_cli.android.screen import ScreenRecorder
 from pirogue_cli.config.config import Configuration
 from pirogue_cli.network.packet_capture import TcpDump
 
@@ -14,12 +15,13 @@ log = logging.getLogger(__name__)
 
 
 class CaptureManager:
-    def __init__(self, output_dir, iface=None):
+    def __init__(self, output_dir, iface=None, record_screen=True):
         self.output_dir = output_dir
         self._output_files = {}
         self.tcp_dump = None
         self.device = None
         self._js_script = None
+        self.record_screen = record_screen
         default_iface = 'wlan0'
         try:
             configuration = Configuration()
@@ -32,6 +34,8 @@ class CaptureManager:
             self.iface = iface
         else:
             self.iface = default_iface
+        if self.record_screen:
+            self.screen_recorder = ScreenRecorder(output_dir)
 
     def start_capture(self, capture_cmd=None):
         if not os.path.exists(self.output_dir):
@@ -45,6 +49,8 @@ class CaptureManager:
         self.device = AndroidDevice()
         self.device.start_frida_server()
         self.tcp_dump.start_capture()
+        if self.record_screen:
+            self.screen_recorder.start_recording()
 
     def get_agent_script(self, extra_scripts_dir=None):
         if self._js_script:
@@ -83,5 +89,7 @@ class CaptureManager:
 
     def stop_capture(self):
         self.save_data_files()
+        if self.record_screen:
+            self.screen_recorder.stop_recording()
         self.device.stop_frida_server()
         self.tcp_dump.stop_capture()

@@ -27,5 +27,6 @@ Depends: ${misc:Depends},
  python3-communityid,
  adb,
  frida,
+ scrcpy,
  tshark,
 Description: Provision PiRogue CLI tool
