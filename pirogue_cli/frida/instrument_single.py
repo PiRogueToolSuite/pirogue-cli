@@ -56,6 +56,7 @@ class FridaApplication(ConsoleApplication):
         api.socket_trace()
         api.log_ssl_keys()
         api.log_aes_info()
+        api.no_root()
         self._update_status('Loaded script')
         self._resume()
         time.sleep(1)

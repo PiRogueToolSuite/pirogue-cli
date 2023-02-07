@@ -76,6 +76,7 @@ class FridaApplication:
                 api.socket_trace()
                 api.log_ssl_keys()
                 api.log_aes_info()
+                api.no_root()
                 FridaApplication.sessions.append(session)
                 FridaApplication.scripts.append(script)
             else:
