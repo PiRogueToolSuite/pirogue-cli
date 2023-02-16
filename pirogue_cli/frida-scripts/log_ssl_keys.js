@@ -44,10 +44,6 @@ function _log_ssl_keys(SSL_CTX_new, SSL_CTX_set_keylog_callback) {
     return 0;
 }
 
-function hookNative(path){
-    console.log(path);
-}
-
 function log_ssl_keys() {
     // Bind onto libssl
     _log_ssl_keys(
