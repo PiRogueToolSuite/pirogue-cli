@@ -2,6 +2,7 @@ import glob
 import json
 import logging
 import os
+import time
 
 import pkg_resources
 
@@ -47,10 +48,40 @@ class CaptureManager:
             capture_cmd=capture_cmd
         )
         self.device = AndroidDevice()
+        self.save_device_properties()
+        device_capture_ts = time.time()*1000
         self.device.start_frida_server()
         self.tcp_dump.start_capture()
+        net_capture_ts = time.time()*1000
+        data = {
+            'network': {
+                'start_capture_time': net_capture_ts,
+                'file': 'traffic.pcap'
+            },
+            'device': {
+                'start_capture_time': device_capture_ts,
+                'file': 'device.json'
+            },
+            'socket_traces': {
+                'file': 'socket_trace.json'
+            },
+            'crypto_traces': {
+                'file': 'aes_info.json'
+            },
+            'sslkeylog': {
+                'file': 'sslkeylog.txt'
+            }
+        }
         if self.record_screen:
             self.screen_recorder.start_recording()
+            screen_capture_ts = time.time()*1000
+            data['screen'] = {
+                'start_capture_time': screen_capture_ts,
+                'file': 'screen.mp4'
+            }
+
+        with open(f'{self.output_dir}/experiment.json', mode='w') as out:
+            json.dump(data, out, indent=2)
 
     def get_agent_script(self, extra_scripts_dir=None):
         if self._js_script:
@@ -72,6 +103,12 @@ class CaptureManager:
         if output_file not in self._output_files:
             self._output_files[output_file] = []
         self._output_files[output_file].append(data)
+
+    def save_device_properties(self):
+        log.info('Saving device properties')
+        props = self.device.get_device_properties()
+        with open(f'{self.output_dir}/device.json', mode='w') as out:
+            json.dump(props, out, indent=2)
 
     def save_data_files(self):
         log.info('Saving data captured by Frida')

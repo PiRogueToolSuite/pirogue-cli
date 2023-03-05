@@ -28,6 +28,30 @@ class AndroidDevice:
             raise Exception('Your Android device must be rooted')
         log.info(f'⚡ Connected...')
 
+    def get_device_properties(self):
+        props = [
+            ('fingerprint', 'ro.vendor.build.fingerprint'),
+            ('brand', 'ro.product.brand'),
+            ('device', 'ro.product.device'),
+            ('manufacturer', 'ro.product.manufacturer'),
+            ('model', 'ro.product.model'),
+            ('name', 'ro.product.name'),
+            ('serialno', 'ro.serialno'),
+        ]
+        device_properties = {}
+        for name, key in props:
+            try:
+                device_properties[name] = self.get_property(key).strip()
+            except Exception:
+                pass
+        # Get IMEI
+        try:
+            imei = self.__adb_shell("""service call iphonesubinfo 1 | awk -F "'" '{print $2}' | sed '1 d' | tr -d '.' | awk '{print}' ORS=""")
+            device_properties['imei'] = imei.strip()
+        except Exception:
+            pass
+        return device_properties
+
     def get_architecture(self):
         cpu = self.get_property('ro.product.cpu.abi')
         if "arm64" in cpu:
