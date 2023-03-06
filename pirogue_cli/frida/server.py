@@ -12,6 +12,9 @@ log = logging.getLogger(__name__)
 class FridaServer:
     @staticmethod
     def download_frida_server(arch: str, output_file, platform: str, client_version: str):
+        if not arch:
+            log.error(f'Unable to determine device ABI, please install Frida server manually at {output_file}')
+            return 
         releases = requests.get(FRIDA_SERVER_RELEASES_URL).json()
         for release in releases:
             tag_name = release.get('tag_name')

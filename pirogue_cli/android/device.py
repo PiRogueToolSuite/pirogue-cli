@@ -53,15 +53,18 @@ class AndroidDevice:
         return device_properties
 
     def get_architecture(self):
-        cpu = self.get_property('ro.product.cpu.abi')
-        if "arm64" in cpu:
-            return "arm64"
-        if "x86_64" in cpu:
-            return "x86_64"
-        if "arm" in cpu:
-            return "arm"
-        if "x86" in cpu:
-            return "x86"
+        try:
+            cpu = self.get_property('ro.product.cpu.abi')
+            if "arm64" in cpu:
+                return "arm64"
+            if "x86_64" in cpu:
+                return "x86_64"
+            if "arm" in cpu:
+                return "arm"
+            if "x86" in cpu:
+                return "x86"
+        except:
+            pass
         return ""
 
     def is_rooted(self):

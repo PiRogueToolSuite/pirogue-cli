@@ -90,17 +90,22 @@ def parse_sll_layer(sll_layer: dict):
 def parse_single_http2_layer(http2_layer: dict):
     data, headers = None, None
     if 'http2_http2_body_reassembled_data' in http2_layer:
-        data = binascii.unhexlify(http2_layer.get('http2_http2_body_reassembled_data').replace(':', ''))
+        _data = http2_layer.get('http2_http2_body_reassembled_data').replace(':', '')
+        data = binascii.unhexlify(_data)
         try:
             data = data.decode('utf-8')
         except Exception:
-            data = http2_layer.get('http2_http2_body_reassembled_data')
+            data = _data
     elif 'http2_http2_data_data' in http2_layer:
-        data = binascii.unhexlify(http2_layer.get('http2_http2_data_data').replace(':', ''))
+        data = http2_layer.get('http2_http2_data_data')
+        if type(data) is list:
+            data = ''.join(data)
+        _data = data.replace(':', '')
+        data = binascii.unhexlify(_data)
         try:
             data = data.decode('utf-8')
         except Exception:
-            data = http2_layer.get('http2_http2_body_reassembled_data')
+            data = _data
     if 'http2_http2_headers' in http2_layer:
         header_name = http2_layer.get('http2_http2_header_name')
         header_value = http2_layer.get('http2_http2_header_value')
