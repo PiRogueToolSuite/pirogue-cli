@@ -16,7 +16,6 @@ class ScreenRecorder:
     def start_recording(self):
         log.info('⚡ Starting screen recording...')
         capture_cmd = f'screenrecord --bugreport --size 1280x720 --bit-rate 2000000 {self.device_path}'
-        # capture_cmd = f'scrcpy -t --max-size=1024 --max-fps=15 --bit-rate=2M --record={self.output_dir}/screen.mp4 -N -n'
         try:
             self.device.adb_shell_no_wait(capture_cmd)
         except Exception as e:
