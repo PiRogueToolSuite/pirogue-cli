@@ -37,6 +37,8 @@ class AndroidDevice:
             ('model', 'ro.product.model'),
             ('name', 'ro.product.name'),
             ('serialno', 'ro.serialno'),
+            ('android_version', 'ro.build.version.release'),
+            ('api_level', 'ro.build.version.sdk'),
         ]
         device_properties = {}
         for name, key in props:
