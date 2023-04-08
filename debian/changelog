@@ -1,3 +1,10 @@
+pirogue-cli (1.0.12) unstable; urgency=medium
+
+  * Daemonize Frida server
+  * Use screenrecord instead of scrcpy
+
+ -- U+039b <hello@pts-project.org>  Sat, 08 Apr 2023 12:29:58 +0200
+
 pirogue-cli (1.0.11) unstable; urgency=medium
 
   * Improve the interception of the TLS keys
