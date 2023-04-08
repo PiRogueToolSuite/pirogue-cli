@@ -22,6 +22,7 @@ class CaptureManager:
         self.tcp_dump = None
         self.device = None
         self._js_script = None
+        self.screen_recorder = None
         self.record_screen = record_screen
         default_iface = 'wlan0'
         try:
@@ -35,8 +36,6 @@ class CaptureManager:
             self.iface = iface
         else:
             self.iface = default_iface
-        if self.record_screen:
-            self.screen_recorder = ScreenRecorder(output_dir)
 
     def start_capture(self, capture_cmd=None):
         if not os.path.exists(self.output_dir):
@@ -48,6 +47,8 @@ class CaptureManager:
             capture_cmd=capture_cmd
         )
         self.device = AndroidDevice()
+        if self.record_screen:
+            self.screen_recorder = ScreenRecorder(self.output_dir, self.device)
         self.save_device_properties()
         device_capture_ts = time.time()*1000
         self.device.start_frida_server()

@@ -1,28 +1,24 @@
 import logging
-import os
 import time
-import signal
-import subprocess
 
+from pirogue_cli.android.device import AndroidDevice
 
 log = logging.getLogger(__name__)
 
 
 class ScreenRecorder:
-    def __init__(self, output_dir) -> None:
+    device_path = '/data/local/tmp/screen.mp4'
+    def __init__(self, device: AndroidDevice, output_dir) -> None:
+        self.device: AndroidDevice = device
         self.output_dir = output_dir
         self.process = None
 
     def start_recording(self):
-        log.info(f'⚡ Starting screen recording...')
-        capture_cmd = f'scrcpy -t --max-size=1024 --max-fps=15 --bit-rate=2M --record={self.output_dir}/screen.mp4 -N'
+        log.info('⚡ Starting screen recording...')
+        capture_cmd = f'screenrecord --bugreport --size 1280x720 --bit-rate 2000000 {self.device_path}'
+        # capture_cmd = f'scrcpy -t --max-size=1024 --max-fps=15 --bit-rate=2M --record={self.output_dir}/screen.mp4 -N -n'
         try:
-            self.process = subprocess.Popen(
-                capture_cmd,
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
+            self.device.adb_shell(capture_cmd)
         except Exception as e:
             self.stop_recording()
             raise e
@@ -30,9 +26,9 @@ class ScreenRecorder:
     def stop_recording(self):
         log.info(f'⚡ Stopping screen recording...')
         try:
-            self.process.send_signal(signal.SIGINT)
+            self.device.adb_shell('pkill -SIGINT screenrecord')
             time.sleep(1)
-            os.killpg(os.getpgid(self.process.pid), signal.SIGINT)
-            self.process.kill()
-        except:
-            pass
+            log.info(f'⚡ Retrieving the screencast from the device...')
+            self.device.adb_pull(self.device_path, f'{self.output_dir}/screen.mp4')
+        except Exception as e:
+            log.exception(e)

@@ -46,7 +46,7 @@ class AndroidDevice:
                 pass
         # Get IMEI
         try:
-            imei = self.__adb_shell("""service call iphonesubinfo 1 | awk -F "'" '{print $2}' | sed '1 d' | tr -d '.' | awk '{print}' ORS=""")
+            imei = self.adb_shell("""service call iphonesubinfo 1 | awk -F "'" '{print $2}' | sed '1 d' | tr -d '.' | awk '{print}' ORS=""")
             device_properties['imei'] = imei.strip()
         except Exception:
             pass
@@ -96,7 +96,7 @@ class AndroidDevice:
         self.rooted = self.has_adb_root or self.requires_su
         return self.rooted
 
-    def __adb_shell(self, command):
+    def adb_shell(self, command):
         if self.requires_su:
             command = f'su -c "{command}"'
         output = subprocess.check_output(
@@ -113,7 +113,7 @@ class AndroidDevice:
         except CalledProcessError as e:
             raise e
 
-    def __adb_push(self, local_file, to):
+    def adb_push(self, local_file, to):
         try:
             subprocess.check_call(
                 f'adb push {local_file} {to}',
@@ -123,13 +123,23 @@ class AndroidDevice:
         except CalledProcessError as e:
             raise e
 
+    def adb_pull(self, device_path, local_path):
+        try:
+            subprocess.check_call(
+                f'adb pull {device_path} {local_path}',
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+        except CalledProcessError as e:
+            raise e
+
     def get_property(self, key: str) -> str:
-        value = self.__adb_shell(f'getprop {key}')
+        value = self.adb_shell(f'getprop {key}')
         return value
 
     def _check_frida_server_running(self):
         try:
-            value = self.__adb_shell(f'ps -A | grep {self.frida_server_name}')
+            value = self.adb_shell(f'ps -A | grep {self.frida_server_name}')
             value = value.strip()
             return bool(value)
         except CalledProcessError:
@@ -137,7 +147,7 @@ class AndroidDevice:
 
     def _check_frida_server_installed(self):
         try:
-            self.__adb_shell(f'ls {self.frida_server_install_dir}')
+            self.adb_shell(f'ls {self.frida_server_install_dir}')
             frida_server_version = self.get_frida_server_version()
             frida_client_version = self.get_frida_client_version()
             if frida_server_version != frida_client_version:
@@ -148,7 +158,7 @@ class AndroidDevice:
 
     def get_frida_server_version(self):
         try:
-            return self.__adb_shell(f'{self.frida_server_install_dir} --version').strip()
+            return self.adb_shell(f'{self.frida_server_install_dir} --version').strip()
         except:
             return '0.0.0'
 
@@ -174,7 +184,7 @@ class AndroidDevice:
     def stop_frida_server(self):
         log.info(f'⚡ Stopping Frida server...')
         try:
-            self.__adb_shell(f'pkill {self.frida_server_name}')
+            self.adb_shell(f'pkill {self.frida_server_name}')
         except Exception as e:
             log.error(e)
 
@@ -184,6 +194,6 @@ class AndroidDevice:
         with NamedTemporaryFile(mode='wb') as frida_server:
             FridaServer.download_frida_server(self.get_architecture(), frida_server.name, 'android', frida_client_version)
             frida_server.seek(0)
-            self.__adb_push(frida_server.name, self.frida_server_install_dir)
-            self.__adb_shell(f'chmod +x {self.frida_server_install_dir}')
+            self.adb_push(frida_server.name, self.frida_server_install_dir)
+            self.adb_shell(f'chmod +x {self.frida_server_install_dir}')
             log.info('⚡ Matching version of frida-server successfully installed...')
