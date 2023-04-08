@@ -105,7 +105,7 @@ class AndroidDevice:
             stderr=subprocess.PIPE)
         return output.decode('utf-8')
 
-    def __adb_shell_no_wait(self, command):
+    def adb_shell_no_wait(self, command):
         try:
             if self.requires_su:
                 command = f'su -c "{command}"'
@@ -179,7 +179,7 @@ class AndroidDevice:
             log.info(f'⚡ Frida server is already running...')
         else:
             log.info(f'⚡ Starting Frida server...')
-            self.__adb_shell_no_wait(f'{self.frida_server_install_dir} --daemonize')
+            self.adb_shell_no_wait(f'{self.frida_server_install_dir} --daemonize')
 
     def stop_frida_server(self):
         log.info(f'⚡ Stopping Frida server...')

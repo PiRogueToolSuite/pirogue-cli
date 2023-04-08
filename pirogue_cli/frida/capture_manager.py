@@ -48,7 +48,7 @@ class CaptureManager:
         )
         self.device = AndroidDevice()
         if self.record_screen:
-            self.screen_recorder = ScreenRecorder(self.output_dir, self.device)
+            self.screen_recorder = ScreenRecorder(self.device, self.output_dir)
         self.save_device_properties()
         device_capture_ts = time.time()*1000
         self.device.start_frida_server()
