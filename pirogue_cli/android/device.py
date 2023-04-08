@@ -179,7 +179,7 @@ class AndroidDevice:
             log.info(f'⚡ Frida server is already running...')
         else:
             log.info(f'⚡ Starting Frida server...')
-            self.__adb_shell_no_wait(f'{self.frida_server_install_dir} && sleep 2147483647 &')
+            self.__adb_shell_no_wait(f'{self.frida_server_install_dir} --daemonize')
 
     def stop_frida_server(self):
         log.info(f'⚡ Stopping Frida server...')
