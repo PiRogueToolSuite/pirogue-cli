@@ -1,3 +1,9 @@
+pirogue-cli (1.0.13) unstable; urgency=medium
+
+  * Fix HTTP2 data parsing issue
+
+ -- U+039b <hello@pts-project.org>  Fri, 21 Apr 2023 16:21:41 +0200
+
 pirogue-cli (1.0.12) unstable; urgency=medium
 
   * Daemonize Frida server
