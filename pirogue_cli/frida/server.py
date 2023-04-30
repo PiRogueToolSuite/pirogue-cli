@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 class FridaServer:
     @staticmethod
     def download_frida_server(arch: str, output_file, platform: str, client_version: str):
+        found = False
         if not arch:
             log.error(f'Unable to determine device ABI, please install Frida server manually at {output_file}')
             return 
@@ -22,6 +23,7 @@ class FridaServer:
                 for asset in release.get('assets'):
                     asset_name = asset.get('name')
                     if 'server' in asset_name and f'{platform}-{arch}.xz' in asset_name:
+                        found = True
                         log.info(f'⚡ Downloading {asset_name}...')
                         xz_file = requests.get(asset['browser_download_url'])
                         log.info(f'⚡ Extracting {asset_name}...')
@@ -31,3 +33,6 @@ class FridaServer:
                             out.write(server_binary)
                             out.flush()
                         return
+        if not found:
+            log.error(f'Unable to find frida-server version {client_version} in GitHub releases. Please install it by hand at /data/local/tmp/frydaxx-server and make it executable using chmod +x.')
+            raise Exception(f'Unable to find frida-server version {client_version} in GitHub releases.')
