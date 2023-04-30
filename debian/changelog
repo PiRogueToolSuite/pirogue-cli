@@ -1,3 +1,10 @@
+pirogue-cli (1.0.14) unstable; urgency=medium
+
+  * Prevent Zygote from pre-forking on Android 10
+  * Raise an error when mathcing frida server version is not found in GitHub releases
+
+ -- U+039b <hello@pts-project.org>  Sun, 30 Apr 2023 11:50:24 +0200
+
 pirogue-cli (1.0.13) unstable; urgency=medium
 
   * Fix HTTP2 data parsing issue
