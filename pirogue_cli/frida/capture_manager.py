@@ -51,6 +51,8 @@ class CaptureManager:
             self.screen_recorder = ScreenRecorder(self.device, self.output_dir)
         self.save_device_properties()
         device_capture_ts = time.time()*1000
+        # Prevent Zygote from pre-forking
+        self.device.adb_shell('setprop persist.device_config.runtime_native.usap_pool_enabled false')
         self.device.start_frida_server()
         self.tcp_dump.start_capture()
         net_capture_ts = time.time()*1000
