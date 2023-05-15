@@ -4,7 +4,7 @@ requirements = [i.strip() for i in open("requirements.txt").readlines()]
 
 setup(
     name="pirogue-cli",
-    version="1.0.7",
+    version="1.0.15",
     author="U+039b",
     author_email="hello@pts-project.org",
     description="CLI interface to control the PiRogue",

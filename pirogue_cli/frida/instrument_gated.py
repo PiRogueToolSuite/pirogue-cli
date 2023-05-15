@@ -75,7 +75,11 @@ class FridaApplication:
                 api = script.exports
                 api.socket_trace()
                 api.log_ssl_keys()
-                api.log_aes_info()
+                try:
+                    api.log_aes_info()
+                except Exception:
+                    pass
+                api.log_ad_ids()
                 api.no_root()
                 FridaApplication.sessions.append(session)
                 FridaApplication.scripts.append(script)
