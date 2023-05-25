@@ -1,6 +1,6 @@
 'use strict';
 
-function log_aes_info() {
+function log_aes_info(pid, process) {
 
     var use_single_byte = false;
     var complete_bytes = new Array();
@@ -39,6 +39,8 @@ function log_aes_info() {
             'type': 'aes_info_log',
             'dump': 'aes_info.json',
             'data_type': 'json',
+            'pid': pid,
+            'process': process,
             'timestamp': Date.now(),
             'data': {
                 'iv': '',
@@ -59,6 +61,8 @@ function log_aes_info() {
             'type': 'aes_info_log',
             'dump': 'aes_info.json',
             'data_type': 'json',
+            'pid': pid,
+            'process': process,
             'timestamp': Date.now(),
             'data': {
                 'iv': '',
@@ -139,6 +143,8 @@ function log_aes_info() {
             'type': 'aes_info_log',
             'dump': 'aes_info.json',
             'data_type': 'json',
+            'pid': pid,
+            'process': process,
             'timestamp': Date.now(),
             'data': {
                 'iv': toHexString(iv),

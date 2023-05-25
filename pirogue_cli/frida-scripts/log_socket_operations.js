@@ -1,11 +1,13 @@
 'use strict';
 
-function _socket_trace() {
+function _socket_trace(pid, process) {
 
     function _send_msg(msg) {
         const _msg = {
             'type': 'socket_trace_log',
             'dump': 'socket_trace.json',
+            'pid': pid,
+            'process': process,
             'data_type': 'json',
             'timestamp': Date.now(),
             'data': msg

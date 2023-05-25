@@ -16,9 +16,6 @@ def on_message(capture_manager, spawn, message):
     if message['type'] == 'send':
         data = message.get('payload')
         if data:
-            if data.get('data_type') == 'json':
-                data['pid'] = spawn.pid
-                data['process'] = spawn.identifier
             capture_manager.capture_data(data)
 
 
@@ -73,10 +70,10 @@ class FridaApplication:
                 script.on('message', lambda message, data: on_message(self.capture_manager, spawn, message))
                 script.load()
                 api = script.exports
-                api.socket_trace()
+                api.socket_trace(spawn.pid, spawn.identifier)
                 api.log_ssl_keys()
                 try:
-                    api.log_aes_info()
+                    api.log_aes_info(spawn.pid, spawn.identifier)
                 except Exception:
                     pass
                 api.log_ad_ids()

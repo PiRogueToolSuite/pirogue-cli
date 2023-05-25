@@ -53,10 +53,10 @@ class FridaApplication(ConsoleApplication):
         self._script.load()
         self._update_status('Loaded script')
         api = self._script.exports
-        api.socket_trace()
+        api.socket_trace('unknown', 'unknown')
         api.log_ssl_keys()
         try:
-            api.log_aes_info()
+            api.log_aes_info('unknown', 'unknown')
         except Exception:
             pass
         api.log_ad_ids()

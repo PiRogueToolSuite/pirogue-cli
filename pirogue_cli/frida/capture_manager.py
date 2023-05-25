@@ -99,6 +99,9 @@ class CaptureManager:
             with open(js_file, mode='r') as f:
                 self._js_script += f.read()
 
+        with open('/tmp/script.js', 'w') as f:
+            f.write(self._js_script)
+
         return self._js_script
 
     def capture_data(self, data):
