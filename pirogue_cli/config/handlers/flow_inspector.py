@@ -3,6 +3,7 @@ import subprocess
 import pkg_resources
 
 from pirogue_cli.status import Systemd
+from pirogue_cli.system.apt import get_install_packages
 
 PWD = pkg_resources.resource_filename('pirogue_cli', 'config-files')
 
@@ -14,6 +15,7 @@ class FlowInspectorConfigurationHandler:
     post_configuration_commands = [
     ]
     template_file = None
+    target_package = 'pirogue-flow-inspector'
     backup_suffix = '.old'
     service_name = 'PiRogue flow inspector'
     systemd_unit_name = 'pirogue-flow-inspector@*.service'
@@ -22,6 +24,9 @@ class FlowInspectorConfigurationHandler:
     def __init__(self, backup: 'ConfigurationFromBackup'):
         self.backup: 'ConfigurationFromBackup' = backup
         self.systemd = Systemd()
+
+    def is_applicable(self):
+        return bool(get_install_packages(self.target_package))
 
     def revert(self):
         previous_unit = open(f'{self.backup.path}/{self.backup_file_name}{self.backup_suffix}', mode='r').read().strip()

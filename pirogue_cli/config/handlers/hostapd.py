@@ -1,6 +1,6 @@
 import shutil
 import subprocess
-
+import os
 import pkg_resources
 import semver
 
@@ -43,6 +43,9 @@ class HostapdConfigurationHandler:
         # Else modify the service configuration file inplace
         else:
             self.parser = KeyValuePairParser(self.configuration_file)
+
+    def is_applicable(self):
+        return os.path.isfile(self.configuration_file) and os.path.isfile(self.package_config_file_template)
 
     def revert(self):
         shutil.copy(f'{self.backup.path}/{self.backup_file_name}{self.backup_suffix}', self.configuration_file)

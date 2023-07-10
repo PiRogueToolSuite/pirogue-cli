@@ -28,4 +28,5 @@ Depends: ${misc:Depends},
  adb,
  frida,
  tshark,
+ tcpdump,
 Description: Provision PiRogue CLI tool

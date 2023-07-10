@@ -19,10 +19,9 @@ def make_layout() -> Layout:
         Layout(name="header", size=3),
         Layout(name="main"),
     )
-    layout["main"].split(
+    layout["main"].split_row(
         Layout(name="left", ratio=2),
-        Layout(name="right", ratio=1),
-        direction='horizontal'
+        Layout(name="right", ratio=1)
     )
     return layout
 

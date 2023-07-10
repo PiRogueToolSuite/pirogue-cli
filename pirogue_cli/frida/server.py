@@ -5,7 +5,7 @@ import requests
 
 
 FRIDA_SERVER_LATEST_RELEASE_URL = 'https://api.github.com/repos/frida/frida/releases/latest'
-FRIDA_SERVER_RELEASES_URL = 'https://api.github.com/repos/frida/frida/releases?per_page=100'
+FRIDA_SERVER_RELEASES_URL = 'https://api.github.com/repos/frida/frida/releases?per_page=30'
 log = logging.getLogger(__name__)
 
 

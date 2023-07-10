@@ -13,6 +13,7 @@ from pirogue_cli.config.handlers.flow_inspector import FlowInspectorConfiguratio
 from pirogue_cli.config.handlers.grafana import GrafanaConfigurationHandler
 from pirogue_cli.config.handlers.hostapd import HostapdConfigurationHandler
 from pirogue_cli.config.handlers.iptables import IptablesConfigurationHandler
+from pirogue_cli.config.handlers.nftables import NftablesConfigurationHandler
 from pirogue_cli.config.handlers.suricata import SuricataConfigurationHandler
 
 LOG_FORMAT = '[%(name)s] %(message)s'
@@ -49,6 +50,7 @@ class ConfigurationFromBackup:
             HostapdConfigurationHandler(self),
             SuricataConfigurationHandler(self),
             IptablesConfigurationHandler(self),
+            NftablesConfigurationHandler(self),
             FlowInspectorConfigurationHandler(self),
             GrafanaConfigurationHandler(self),
             #  etc.
@@ -56,10 +58,14 @@ class ConfigurationFromBackup:
         applied = []
         for handler in self.configuration_handlers:
             try:
-                log.info(f'Applying configuration to {handler.service_name}.')
-                applied.append(handler)
-                handler.apply_configuration()
-                log.info(f'Configuration successfully applied to {handler.service_name}.')
+                if handler.is_applicable():
+                    log.info(f'Applying configuration to {handler.service_name}.')
+                    applied.append(handler)
+                    handler.apply_configuration()
+                    log.info(f'Configuration successfully applied to {handler.service_name}.')
+                else:
+                    log.info(f'{handler.service_name} not installed. Skipping it.')
+                    continue
             except Exception as e:
                 log.error(f'An error occurred during {handler.service_name} configuration.')
                 log.error(e)

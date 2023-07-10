@@ -1,8 +1,8 @@
-pirogue-cli (1.1.0) UNRELEASED; urgency=medium
+pirogue-cli (1.1.0) bookworm; urgency=medium
 
-  * New upstream release, targeting Debian 12.
+  * New upstream release, targeting Debian 12
 
- -- Cyril Brulebois <cyril@debamax.com>  Sat, 24 Jun 2023 02:11:38 +0200
+ -- U+039b <hello@pts-project.org>  Mon, 10 Jul 2023 14:30:03 +0200
 
 pirogue-cli (1.0.16) unstable; urgency=medium
 
