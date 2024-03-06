@@ -31,6 +31,7 @@ class ScreenRecorder:
         time.sleep(1)
         try:
             log.info(f'⚡ Retrieving the screencast from the device...')
+            self.device.adb_shell(f'chmod 604 {self.device_path}')
             self.device.adb_pull(self.device_path, f'{self.output_dir}/screen.mp4')
         except Exception as e:
             log.error(e)
