@@ -1,3 +1,9 @@
+pirogue-cli (1.1.1) bookworm; urgency=medium
+
+  * Update screen.mp4 read permission before pulling from the device
+
+ -- U+039b <hello@pts-project.org>  Thu, 07 Mar 2024 11:13:41 +0100
+
 pirogue-cli (1.1.0) bookworm; urgency=medium
 
   * New upstream release, targeting Debian 12
